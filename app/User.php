@@ -29,4 +29,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password', 'remember_token' 
     ];
+
+    public static function findUser($name)
+    {
+        return self::where('name','=',$name)->get();
+    }
 }

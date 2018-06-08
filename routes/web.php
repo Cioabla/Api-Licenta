@@ -15,7 +15,7 @@ $app->get('/', function () use ($app) {
     return $app->version();
 });
 
-$app->group(['prefix'=>'api/v1'],function ($app){
+$app->group(['prefix'=>'api/v1' , 'middleware' => 'checkJwtSecret'],function ($app){
 
     $app->group(['prefix' => 'posts'],function ($app){
         $app->post('add','PostController@createPost');
@@ -27,9 +27,10 @@ $app->group(['prefix'=>'api/v1'],function ($app){
 
     $app->group(['prefix' => 'users'],function ($app){
         $app->post('add','UserController@add');
-        $app->get('view/{name}','UserController@viewPost');
-        $app->put('edit/{name}','UserController@updatePost');
-        $app->delete('delete/{name}','UserController@deletePost');
+        $app->get('view/{name}','UserController@viewUser');
+        $app->get('login/{name}','UserController@login');
+        $app->put('edit/{name}','UserController@updateUser');
+        $app->delete('delete/{name}','UserController@deleteUser');
         $app->get('index','UserController@index');
     });
 
