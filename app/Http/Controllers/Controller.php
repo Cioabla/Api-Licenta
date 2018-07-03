@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use \Firebase\JWT\JWT;
 use App\User;
+use App\Role;
 
 class Controller extends BaseController
 {
     private $jwt_key;
+    protected $userName;
+    protected $userEmail;
 
 
     public function __construct()
@@ -16,36 +19,64 @@ class Controller extends BaseController
         $this->jwt_key = env('JWT_KEY');
     }
 
+    public function addUserRole($vector)
+    {
+        return array_merge($vector , ['role_id' => (Role::findRoleByName('user'))->id]);
+    }
+
     public function setUserToken($data)
     {
         return JWT::encode(
                 array(
-                    "id" => $data[0]['id'],
-                    "name" => $data[0]['name'],
-                    "email" => $data[0]['email'],
-                    "password" => $data[0]['password']
+                    "id" => $data->id,
+                    "name" => $data->name,
+                    "username" => $data->username,
+                    "email" => $data->email,
+                    "password" => $data->password
                 ),$this->jwt_key);
     }
 
-    public function checkIfNameIsValid($name)
+    public function findUser($username)
     {
         try {
-            User::where('name','=',$name)->firstOrFail();
+            $this->userName = User::where('username','=',$username)->firstOrFail();
 
-            return true;
         } catch (\Exception $e){
-            return false;
+
+            $this->userName = null;
         }
     }
 
-    public function checkIfEmailIsValid($email)
+    public function findEmail($email)
     {
         try {
-            User::where('email','=',$email)->firstOrFail();
+            $this->userEmail = User::where('email','=',$email)->firstOrFail();
 
-            return true;
         } catch (\Exception $e){
-            return false;
+
+            $this->userEmail = null;
         }
     }
+
+//    public function checkIfNameIsValid($name)
+//    {
+//        try {
+//            User::where('name','=',$name)->firstOrFail();
+//
+//            return true;
+//        } catch (\Exception $e){
+//            return false;
+//        }
+//    }
+//
+//    public function checkIfEmailIsValid($email)
+//    {
+//        try {
+//            User::where('email','=',$email)->firstOrFail();
+//
+//            return true;
+//        } catch (\Exception $e){
+//            return false;
+//        }
+//    }
 }

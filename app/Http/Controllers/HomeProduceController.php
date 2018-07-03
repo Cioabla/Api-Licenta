@@ -9,10 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\HomeProduce;
-use App\Post;
-use App\Http\Controllers\Controller;
 use App\Product;
-use App\Subcategory;
 use Illuminate\Http\Request;
 
 
@@ -48,31 +45,17 @@ class HomeProduceController extends Controller
     public function index()
     {
         $produces = HomeProduce::all();
-        $i = 0;
+        $result = [];
         foreach ($produces as $produce)
         {
-           $produce2 = Product::select('subcategory_id','name','model','price','qty','img')->find($produce['product_id']);
-           $result[] = array_merge_recursive(array($produce2), array($produce));
+           $produce2 = Product::select('subcategory_id','name','model','price','qty','img')->find($produce->product_id);
+           $produce2['location'] =  $produce['location'];
+
+            $result = array_merge($result , array($produce2));
 
         }
 
-
-//        $produce2[] = Product::select('subcategory_id','name','model','price','qty')->find($produces[0]['product_id']);
-//        $produce2[] = Product::select('subcategory_id','name','model','price','qty')->find($produces[0]['product_id']);
-//        $produce2[] = $produces[0];
-//        $produce2[] = array_merge_recursive(array($produce2[2]), array($produce2[1]));
-
-
-//
-//        for($i = 0 ; $i<5;$i++)
-//        {
-//            $v[] = $produce2[$i];
-//        }
-//
-//        $a1=array("red","green");
-//        $a2=array("blue","yellow");
-
-
         return response()->json($result);
+
     }
 }

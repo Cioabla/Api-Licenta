@@ -7,6 +7,7 @@ use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use App\Role;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -18,7 +19,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password' , 'api_token'
+        'name', 'email', 'password' , 'username' , 'role_id'
     ];
 
     /**
@@ -30,8 +31,18 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password', 'remember_token' 
     ];
 
-    public static function findUser($name)
+    public function role()
     {
-        return self::where('name','=',$name)->get();
+        return $this->belongsTo('App\Role');
     }
+//
+//    public static function findUser($username)
+//    {
+//        return self::where('username','=',$username)->get();
+//    }
+//
+//    public static function findEmail($email)
+//    {
+//        return self::where('email','=',$email)->get();
+//    }
 }

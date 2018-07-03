@@ -66,3 +66,12 @@ $app->group(['prefix'=>'api/v1' , 'middleware' => 'checkJwtSecret'],function ($a
     });
 
 });
+
+$app->group(['prefix'=>'api/v1'],function ($app){
+
+    $app->group(['prefix' => 'users'],function ($app){
+        $app->get('checkUsername/{username}','UserController@checkUsername');
+        $app->get('checkEmail/{email}','UserController@checkEmail');
+    });
+
+});

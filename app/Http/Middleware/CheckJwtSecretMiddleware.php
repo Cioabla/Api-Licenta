@@ -21,6 +21,7 @@ class CheckJwtSecretMiddleware
 //            return response()->json(env('JWT_KEY'));
             return $next($request);
         }else{
+
             abort(404,"You're not authorized");
         }
 
